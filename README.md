@@ -1,6 +1,6 @@
 # simple_provider_app
 
-A new Flutter project.
+A default Flutter project using Provider
 
 ## Getting Started
 
