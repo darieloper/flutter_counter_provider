@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(ChangeNotifierProvider(
+      create: (context) => CounterModel(), child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -29,14 +31,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,18 +44,32 @@ class _MyHomePageState extends State<MyHomePage> {
             Text(
               'You have pushed the button this many times:',
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
+            Consumer<CounterModel>(builder: (context, value, child) {
+              return Text(
+                '${value.counter}',
+                style: Theme.of(context).textTheme.headline4,
+              );
+            })
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
+        onPressed: () =>
+            Provider.of<CounterModel>(context, listen: false).increment(),
         tooltip: 'Increment',
         child: Icon(Icons.add),
       ),
     );
+  }
+}
+
+class CounterModel extends ChangeNotifier {
+  int _counter = 0;
+
+  int get counter => _counter;
+
+  void increment() {
+    ++_counter;
+    this.notifyListeners();
   }
 }
